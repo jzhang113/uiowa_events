@@ -3,3 +3,36 @@
  * @file
  * This module handles the applicaiton logic for the University of Iowa Events module.
  */
+
+ function uiowa_events_menu() {
+    $items['events'] = array(
+      'page callback' => 'uiowa_events_full_listing',
+      'access callback' => 'user_access',
+      'access arguments' => array('access content'),
+      'type' => MENU_CALLBACK,
+    );
+    return $items;
+  }
+
+
+/**
+ * Function to display the full listing of events page.
+ *
+ */
+
+ function uiowa_events_full_listing(){
+   $data = Array();
+   return theme('uiowa_events_full_listing_template', array('data' => $data));
+ }
+
+ function uiowa_events_theme() {
+   $path = drupal_get_path('module', 'uiowa_events') . '/theme';
+   $themes = array (
+       'uiowa_events_full_listing_template' => array(
+         'path' => $path,
+           'template' => 'uiowa-events-full-listing',
+           'variables' => array('data' => NULL),
+       ),
+   );
+   return $themes;
+ }
