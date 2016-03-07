@@ -1,0 +1,29 @@
+
+<?php
+/**
+ * @file
+ * Install and uninstall tasks for University of Iowa Events.
+ */
+
+ /**
+ * Implements hook_install().
+ */
+function uiowa_events_install() {
+  // Set the initial filter ID to nothing.
+  variable_set('uiowa_bar_filter_id', NULL);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function uiowa_events_uninstall() {
+  // Delete the color palette variable.
+  variable_del('uiowa_bar_filter_id');
+}
+
+/**
+ * Create the filter ID variable.
+ */
+function uiowa_events_update_2800(&$sandbox) {
+  variable_set('uiowa_bar_filter_id', NULL);
+}
