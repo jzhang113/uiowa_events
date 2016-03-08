@@ -21,5 +21,16 @@ function uiowa_events_config_form($form, &$form_state) {
     '#size' => 60,
     '#required' => FALSE,
   );
+
+  $form['uiowa_events_event_link'] = array(
+    '#type' => 'select',
+    '#title' => t('Link Option'),
+    '#default_value' => variable_get('uiowa_events_event_link'),
+    '#description' => t('Choose to have events link to Localist or an event page on this site.'),
+    '#options' => array(
+      'event-link-external' => t('Link to Localist'),
+      'event-link-internal' => t('Link to page on this site'),
+    ),
+  );
   return system_settings_form($form);
 }

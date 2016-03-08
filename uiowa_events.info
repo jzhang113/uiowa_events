@@ -5,3 +5,9 @@ package = University of Iowa
 
 dependencies[] = imagecache_external
 files[] = uiowa_events.module
+files[] = uiowa_events.install
+files[] = includes/uiowa_events.admin.inc
+files[] = includes/uiowa_events.full_listing.inc
+files[] = includes/uiowa_events.single_event.inc
+files[] = includes/uiowa-events-full-listing.tpl.php
+files[] = includes/uiowa-events-single-event.tpl.php

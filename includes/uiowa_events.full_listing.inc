@@ -9,8 +9,8 @@
 function template_preprocess_uiowa_events_full_listing(&$variables) {
   $items = array();
   $data = $variables['data'];
+  dpm($data);
   drupal_set_title($variables['title']);
-
   $variables['list'] = theme('uiowa_events_teaser',
     array(
       'data' => $data,
@@ -20,11 +20,15 @@ function template_preprocess_uiowa_events_full_listing(&$variables) {
 
 function theme_uiowa_events_teaser($variables){
   $data = $variables['data'];
+  $external_link = FALSE;
+  if(variable_get('uiowa_events_event_link') == 'event-link-external') $external_link = TRUE;
+
   $items = Array();
   $items['events'] = array(
     '#attributes' => array('class' => array('uiowa-events')),
     '#type' => 'container',
   );
+
   foreach ($data as $e) {
 
     $event = Array();
@@ -38,8 +42,12 @@ function theme_uiowa_events_teaser($variables){
       '#style_name' => 'medium',
       '#alt' => $e['title'],
     );
+
+    $title_link = '';
+    if($external_link) $title_link = '<h3><a href="http://events.uiowa.edu/event/'.$e['id'].'">'.$e['title'].'</a></h3>';
+    else $title_link = '<h3><a href="/event/'.$e['id'].'">'.$e['title'].'</a></h3>';
     $event['container']['title'] = array(
-      '#markup' => '<h3>'.$e['title'].'</h3>',
+      '#markup' => $title_link,
     );
 
     $date_string = '';
