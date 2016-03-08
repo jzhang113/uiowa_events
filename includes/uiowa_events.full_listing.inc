@@ -9,7 +9,6 @@
 function template_preprocess_uiowa_events_full_listing(&$variables) {
   $items = array();
   $data = $variables['data'];
-  dpm($data);
   drupal_set_title($variables['title']);
 
   $variables['list'] = theme('uiowa_events_teaser',
@@ -21,7 +20,6 @@ function template_preprocess_uiowa_events_full_listing(&$variables) {
 
 function theme_uiowa_events_teaser($variables){
   $data = $variables['data'];
-  dpm($data);
   $items = Array();
   $items['events'] = array(
     '#attributes' => array('class' => array('uiowa-events')),
@@ -35,7 +33,10 @@ function theme_uiowa_events_teaser($variables){
       '#type' => 'container',
     );
     $event['container']['image'] = array(
-      '#markup' => '<img src="'.$e['photo'].'" alt="'.$e['title'].'" title="'.$e['title'].'" />',
+      '#theme' => 'imagecache_external',
+      '#path' => $e['photo'],
+      '#style_name' => 'medium',
+      '#alt' => $e['title'],
     );
     $event['container']['title'] = array(
       '#markup' => '<h3>'.$e['title'].'</h3>',

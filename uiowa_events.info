@@ -2,4 +2,6 @@ name = University of Iowa Events
 description = Provides dynamic views from the University of Iowa events promotion system.
 core = 7.x
 package = University of Iowa
+
+dependencies[] = imagecache_external
 files[] = uiowa_events.module
