@@ -9,7 +9,6 @@
 function template_preprocess_uiowa_events_full_listing(&$variables) {
   $items = array();
   $data = $variables['data'];
-  dpm($data);
   drupal_set_title($variables['title']);
   $variables['list'] = theme('uiowa_events_teaser',
     array(
