@@ -22,7 +22,9 @@
   flex: 0 0 33%;
 }
 
-#uiowa-event #secondary-column img {
+#uiowa-event #secondary-column img,
+#uiowa-event #secondary-column .btn {
   display: block;
-  margin: 0 auto;
+  margin: 0 auto 1em;
+  max-width: 70%;
 }

@@ -22,13 +22,18 @@ function template_preprocess_uiowa_events_single_event(&$variables) {
   $current_date_string = '';
   $matched_key;
 
-  // Finding the current date event instance
+  // Finding the current or next upcoming date event instance
 
   foreach($variables['data']['event_instances'] as $key => $event){
     if(startsWith($event['event_instance']['start'],$today)){
       $matched_key = $key;
       $current_date_string = dateStringilizer($event['event_instance']);
     }
+  }
+
+  if(!isset($matched_key)){
+    $matched_key = 0;
+    $current_date_string = dateStringilizer($variables['data']['event_instances'][0]['event_instance']);
   }
 
   // Passing the current date string to the variables array
@@ -40,6 +45,7 @@ function template_preprocess_uiowa_events_single_event(&$variables) {
   $future_instances = '';
 
   $instance_total = count($variables['data']['event_instances']);
+
   $more_events_count = $instance_total-$matched_key-1;
   if($more_events_count > 10){
     $i = 1;

@@ -11,7 +11,7 @@
  * $title
  *   Sets the page title
  * $list
- *   Pre-formatted list.
+ *   Pre-formatted list of events.
  */
 ?>
 <?php print $list; ?>
