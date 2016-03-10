@@ -18,7 +18,7 @@
   <div id="main-column">
     <div class="event-time">
       <?php if (!empty($data['future_instances'])): ?>
-        <?php print $data['today'] ?> → more dates through <?php print date('l, F j',strtotime($data['last_date'])) ?>
+        <?php print $data['today'] ?> → <span class="future-instances-toggle">more dates through <?php print date('l, F j',strtotime($data['last_date'])) ?></span>
         <div class="future-instances">
           <?php print $data['future_instances'] ?>
         </div>

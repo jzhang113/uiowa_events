@@ -11,3 +11,4 @@ files[] = includes/uiowa_events.full_listing.inc
 files[] = includes/uiowa_events.single_event.inc
 files[] = includes/uiowa-events-full-listing.tpl.php
 files[] = includes/uiowa-events-single-event.tpl.php
+files[] = js/single-event.js

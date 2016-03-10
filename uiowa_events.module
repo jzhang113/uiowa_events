@@ -114,6 +114,7 @@ function uiowa_events_permission() {
       $localist_event = file_get_contents($localist_url);
       $data = json_decode($localist_event,true);
       drupal_add_css(drupal_get_path('module', 'uiowa_events') . '/single.css');
+      drupal_add_js(drupal_get_path('module', 'uiowa_events') . '/js/single-event.js');
       $uiowa_events_path = drupal_get_path('module', 'uiowa_events') . '/includes';
       include_once DRUPAL_ROOT . '/' . $uiowa_events_path . '/uiowa_events.single_event.inc';
       return theme('uiowa_events_single_event', array('data' => $data['event'], 'title' => $data['event']['title']));
