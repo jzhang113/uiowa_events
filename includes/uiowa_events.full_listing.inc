@@ -9,12 +9,46 @@
 function template_preprocess_uiowa_events_full_listing(&$variables) {
   $items = array();
   $data = $variables['data'];
+  $date = $variables['date'];
   drupal_set_title($variables['title']);
+
+  $variables['nav'] = theme('uiowa_events_full_listing_date_nav',
+    array(
+      'date' => $date,
+    )
+  );
+
   $variables['list'] = theme('uiowa_events_teaser',
     array(
       'data' => $data,
     )
   );
+}
+
+function theme_uiowa_events_full_listing_date_nav($variables){
+  $nav = Array();
+  $page_date = $variables['date'];
+
+  $nav['pagination'] = array(
+    '#prefix' => '<ul class="pagination">',
+    '#markup' => '  <li>
+                      <a href="/events/'.date('Y-m-d', strtotime("-1 days", strtotime($page_date))).'" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                    <li class="active">
+                        <a href="#">'.date('l, F j',strtotime($page_date)).'</a>
+                    </li>
+                    <li>
+                      <a href="/events/'.date('Y-m-d', strtotime("+1 days", strtotime($page_date))).'" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>',
+    '#suffix' => '</ul>'
+  );
+
+  $output = drupal_render($nav);
+  return $output;
 }
 
 function theme_uiowa_events_teaser($variables){

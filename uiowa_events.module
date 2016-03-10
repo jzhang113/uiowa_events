@@ -20,8 +20,17 @@ function uiowa_events_permission() {
  * Implements hook_menu().
  */
  function uiowa_events_menu() {
-  $items['events'] = array(
+
+   $items['events'] = array(
+     'page callback' => 'uiowa_events_full_listing',
+     'access callback' => 'user_access',
+     'access arguments' => array('access content'),
+     'type' => MENU_CALLBACK,
+   );
+
+  $items['events/%'] = array(
     'page callback' => 'uiowa_events_full_listing',
+    'page arguments' => array(1),
     'access callback' => 'user_access',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
@@ -54,11 +63,15 @@ function uiowa_events_permission() {
  *
  */
 
- function uiowa_events_full_listing(){
-   $localist_url = "http://events.uiowa.edu/api/2/events";
-   if(variable_get('uiowa_events_filter_id')) $localist_url .= '?type='.variable_get('uiowa_events_filter_id');
+ function uiowa_events_full_listing($date = null){
 
+   $localist_url = "http://events.uiowa.edu/api/2/events?pp=50&days=1";
+   if($date) $localist_url .= '&start='.$date;
+   if(variable_get('uiowa_events_filter_id')) $localist_url .= '&type='.variable_get('uiowa_events_filter_id');
 
+   $page_date = '';
+   if($date) $page_date = $date;
+   else $page_date = date('Y-m-d');
 
    $localist_events = file_get_contents($localist_url);
    $events = json_decode($localist_events,true);
@@ -97,9 +110,8 @@ function uiowa_events_permission() {
    }
    $uiowa_events_path = drupal_get_path('module', 'uiowa_events') . '/includes';
    include_once DRUPAL_ROOT . '/' . $uiowa_events_path . '/uiowa_events.full_listing.inc';
-   return theme('uiowa_events_full_listing', array('data' => $data, 'title' => 'Events'));
+   return theme('uiowa_events_full_listing', array('data' => $data, 'title' => 'Events', 'date' => $page_date));
  }
-
 
  /**
   * Function to display an individual event page.
@@ -142,6 +154,9 @@ function uiowa_events_permission() {
        ),
        'uiowa_events_teaser' => array(
          'variables' => array('data' => NULL),
+       ),
+       'uiowa_events_full_listing_date_nav' => array(
+         'variables' => array('date' => NULL),
        ),
    );
    return $themes;

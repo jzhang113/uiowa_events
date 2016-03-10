@@ -10,8 +10,11 @@
  *
  * $title
  *   Sets the page title
+ * $nav
+ *   Date based navigation
  * $list
  *   Pre-formatted list of events.
  */
 ?>
+<?php print $nav; ?>
 <?php print $list; ?>
