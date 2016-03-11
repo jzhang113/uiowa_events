@@ -65,16 +65,24 @@ function uiowa_events_permission() {
 
  function uiowa_events_full_listing($date = null){
 
-   $localist_url = "http://events.uiowa.edu/api/2/events?pp=50&days=1";
-   if($date) $localist_url .= '&start='.$date;
-   if(variable_get('uiowa_events_filter_id')) $localist_url .= '&type='.variable_get('uiowa_events_filter_id');
+  $localist_url = "http://events.uiowa.edu/api/2/events?pp=50&days=1";
+  if($date) $localist_url .= '&start='.$date;
+  if(variable_get('uiowa_events_filter_id')) $localist_url .= '&type='.variable_get('uiowa_events_filter_id');
 
-   $page_date = '';
-   if($date) $page_date = $date;
-   else $page_date = date('Y-m-d');
+  $page_date = '';
+  if($date) $page_date = $date;
+  else $page_date = date('Y-m-d');
 
-   $localist_events = file_get_contents($localist_url);
-   $events = json_decode($localist_events,true);
+  if (!cache_get('uiowa_events_full_listing'.$page_date )) {
+    $localist_events = drupal_http_request($localist_url);
+    cache_set('uiowa_events_full_listing'.$page_date , $localist_events, 'cache',  REQUEST_TIME  + (600)); // Stores in cache table and expires after 6 months
+    $events = json_decode($localist_events->data,true);
+  }
+  else {
+    $return = cache_get('uiowa_events_full_listing'.$page_date );
+    $events = json_decode($return->data->data,true);
+  }
+
    $data = Array();
 
    foreach($events['events'] as $event){
@@ -123,8 +131,16 @@ function uiowa_events_permission() {
     if(variable_get('uiowa_events_event_link') == 'event-link-external') drupal_not_found();
     else{
       $localist_url = "http://events.uiowa.edu/api/2/events/".$event_id;
-      $localist_event = file_get_contents($localist_url);
-      $data = json_decode($localist_event,true);
+
+      if (!cache_get('uiowa_events_single_event'.$event_id )) {
+        $localist_event = drupal_http_request($localist_url);
+        cache_set('uiowa_events_single_event'.$event_id , $localist_event, 'cache',  REQUEST_TIME  + (600)); // Stores in cache table and expires after 6 months
+        $data = json_decode($localist_event->data,true);
+      }
+      else {
+        $return = cache_get('uiowa_events_single_event'.$event_id );
+        $data = json_decode($return->data->data,true);
+      }
       drupal_add_css(drupal_get_path('module', 'uiowa_events') . '/single.css');
       drupal_add_js(drupal_get_path('module', 'uiowa_events') . '/js/single-event.js');
       $uiowa_events_path = drupal_get_path('module', 'uiowa_events') . '/includes';
