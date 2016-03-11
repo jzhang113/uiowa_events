@@ -1,5 +1,5 @@
 <?php
-global $base_url;
+
 /**
  * Create FAQ page if set to show the answer in a new page.
  *
@@ -40,6 +40,7 @@ function template_preprocess_uiowa_events_full_listing(&$variables) {
 }
 
 function theme_uiowa_events_full_listing_date_nav($variables){
+  global $base_url;
   $nav = Array();
   $page_date = $variables['date'];
 
@@ -66,6 +67,7 @@ function theme_uiowa_events_full_listing_date_nav($variables){
 }
 
 function theme_uiowa_events_teaser($variables){
+  global $base_url;
   $external_link = $variables['external_link'];
   $event = Array();
 
