@@ -75,7 +75,7 @@ function uiowa_events_permission() {
 
   if (!cache_get('uiowa_events_full_listing'.$page_date )) {
     $localist_events = drupal_http_request($localist_url);
-    cache_set('uiowa_events_full_listing'.$page_date , $localist_events, 'cache',  REQUEST_TIME  + (600)); // Stores in cache table and expires after 6 months
+    cache_set('uiowa_events_full_listing'.$page_date , $localist_events, 'cache',  REQUEST_TIME  + (60 * variable_get('uiowa_events_cache_time')));
     $events = json_decode($localist_events->data,true);
   }
   else {
@@ -134,7 +134,7 @@ function uiowa_events_permission() {
 
       if (!cache_get('uiowa_events_single_event'.$event_id )) {
         $localist_event = drupal_http_request($localist_url);
-        cache_set('uiowa_events_single_event'.$event_id , $localist_event, 'cache',  REQUEST_TIME  + (600)); // Stores in cache table and expires after 6 months
+        cache_set('uiowa_events_single_event'.$event_id , $localist_event, 'cache',  REQUEST_TIME  + (60 * variable_get('uiowa_events_cache_time')));
         $data = json_decode($localist_event->data,true);
       }
       else {

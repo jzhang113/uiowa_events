@@ -13,6 +13,7 @@ function uiowa_events_config_form($form, &$form_state) {
     '#type' => 'markup',
     '#markup' => t('<p>These settings let you configure the University of Iowa Events module.</p>'),
   );
+
   $form['uiowa_events_filter_id'] = array(
     '#type' => 'textfield',
     '#title' => t('Events Filter ID'),
@@ -32,5 +33,33 @@ function uiowa_events_config_form($form, &$form_state) {
       'event-link-internal' => t('Link to page on this site'),
     ),
   );
+
+  $form['uiowa_events_cache_time'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Events Caching'),
+    '#default_value' => variable_get('uiowa_events_cache_time'),
+    '#description' => t('Enter the number of minutes event data should be cached. (Minimum of 5 minutes)'),
+    '#size' => 60,
+    '#required' => TRUE,
+  );
   return system_settings_form($form);
+}
+
+/**
+ * Implements validation from the Form API.
+ *
+ * @param $form
+ *   A structured array containing the elements and properties of the form.
+ * @param $form_state
+ *   An array that stores information about the form's current state
+ *   during processing.
+ */
+function uiowa_events_config_form_validate($form, &$form_state){
+  $minutes = $form_state['values']['uiowa_events_cache_time'];
+  if (!is_numeric($minutes)){
+    form_set_error('uiowa_events_cache_time', t('You must enter a number for the minutes to cache data.'));
+  }
+  elseif ($minutes < 5){
+    form_set_error('uiowa_events_cache_time', t('Minimum cache limit is 5 minutes'));
+  }
 }
