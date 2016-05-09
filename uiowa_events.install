@@ -28,25 +28,16 @@ function uiowa_events_uninstall() {
 }
 
 /**
- * Create the filter ID variable.
+ * Create initial uiowa_events variables if they do not already exist.
  */
-function uiowa_events_update_2800(&$sandbox) {
-  // Set the initial filter ID to nothing.
-  variable_set('uiowa_bar_filter_id', NULL);
-}
+function uiowa_events_update_7000() {
+  if (empty(variable_get('uiowa_events_event_link'))) {
+    // Set the link type to link to Localist.
+    variable_set('uiowa_events_event_link', 'event-link-external');
+  }
 
-/**
- * Create the event link variable.
- */
-function uiowa_events_update_2801(&$sandbox) {
-  // Set the link type to link to Localist.
-  variable_set('uiowa_events_event_link', 'event-link-external');
-}
-
-/**
- * Create the cache time variable.
- */
-function uiowa_events_update_2802(&$sandbox) {
-  // Set the default cache time in minutes.
-  variable_set('uiowa_events_cache_time', '60');
+  if (empty(variable_get('uiowa_events_cache_time'))) {
+    // Set the default cache time in minutes.
+    variable_set('uiowa_events_cache_time', '60');
+  }
 }
