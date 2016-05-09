@@ -65,16 +65,28 @@ function uiowa_events_permission() {
 
  function uiowa_events_full_listing($date = null){
 
-  $localist_url = "http://events.uiowa.edu/api/2/events?pp=50&days=1";
-  if($date) $localist_url .= '&start='.$date;
-  if(variable_get('uiowa_events_filter_id')) $localist_url .= '&type='.variable_get('uiowa_events_filter_id');
+  $localist_url = "http://events.uiowa.edu/api/2/events";
+
+  $parameters = array(
+    'pp' => '50',
+    'days' => '1',
+  );
+
+  if($date) {
+    $parameters['start'] = $date;
+  }
+
+  if(variable_get('uiowa_events_filter_id')) {
+    $parameters['type'] = variable_get('uiowa_events_filter_id');
+  }
 
   $page_date = '';
   if($date) $page_date = $date;
   else $page_date = date('Y-m-d');
 
   if (!cache_get('uiowa_events_full_listing'.$page_date )) {
-    $localist_events = drupal_http_request($localist_url);
+    $full_url = url($localist_url, array('query' => $parameters ));
+    $localist_events = drupal_http_request($full_url);
     cache_set('uiowa_events_full_listing'.$page_date , $localist_events, 'cache',  REQUEST_TIME  + (60 * variable_get('uiowa_events_cache_time')));
     $events = json_decode($localist_events->data,true);
   }
