@@ -9,8 +9,6 @@
  * Implements hook_install().
  */
 function uiowa_events_install() {
-  // Set the initial filter ID to nothing.
-  variable_set('uiowa_bar_filter_id', NULL);
   // Set the link type to link to Localist.
   variable_set('uiowa_events_event_link', 'event-link-external');
   // Set the default cache time in minutes.
