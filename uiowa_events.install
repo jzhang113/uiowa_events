@@ -1,4 +1,3 @@
-
 <?php
 /**
  * @file
@@ -6,8 +5,8 @@
  */
 
  /**
- * Implements hook_install().
- */
+  * Implements hook_install().
+  */
 function uiowa_events_install() {
   // Set the link type to link to Localist.
   variable_set('uiowa_events_event_link', 'event-link-external');

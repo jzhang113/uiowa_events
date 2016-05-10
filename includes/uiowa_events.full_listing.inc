@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Full listing theme functions.
+ */
 
 /**
  * Create FAQ page if set to show the answer in a new page.
@@ -17,11 +21,10 @@ function template_preprocess_uiowa_events_full_listing(&$variables) {
     )
   );
 
-
   $external_link = FALSE;
-  if(variable_get('uiowa_events_event_link') == 'event-link-external') $external_link = TRUE;
+  if (variable_get('uiowa_events_event_link') == 'event-link-external') $external_link = TRUE;
 
-  $items = Array();
+  $items = array();
   $items['events'] = array(
     '#attributes' => array('class' => array('uiowa-events')),
     '#type' => 'container',
@@ -39,37 +42,52 @@ function template_preprocess_uiowa_events_full_listing(&$variables) {
   $variables['list'] = drupal_render($items);;
 }
 
-function theme_uiowa_events_full_listing_date_nav($variables){
+/**
+ * Theme function for full listing date navigation.
+ *
+ * @param array $variables
+ *    Variables from the event data.
+ */
+function theme_uiowa_events_full_listing_date_nav($variables) {
   global $base_url;
-  $nav = Array();
+  $nav = array();
   $page_date = $variables['date'];
 
   $nav['pagination'] = array(
     '#prefix' => '<ul class="pagination">',
     '#markup' => '  <li>
-                      <a href="'.$base_url.'/events/'.date('Y-m-d', strtotime("-1 days", strtotime($page_date))).'" aria-label="Previous">
+                      <a href="' . $base_url . '/events/' . date('Y-m-d', strtotime("-1 days", strtotime($page_date))) . '" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                       </a>
                     </li>
                     <li class="active">
-                        <a href="#">'.date('l, F j',strtotime($page_date)).'</a>
+                        <a href="#">' . date('l, F j', strtotime($page_date)) . '</a>
                     </li>
                     <li>
-                      <a href="'.$base_url.'/events/'.date('Y-m-d', strtotime("+1 days", strtotime($page_date))).'" aria-label="Next">
+                      <a href="' . $base_url . '/events/' . date('Y-m-d', strtotime("+1 days", strtotime($page_date))) . '" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                       </a>
                     </li>',
-    '#suffix' => '</ul>'
+    '#suffix' => '</ul>',
   );
 
   $output = drupal_render($nav);
   return $output;
 }
 
-function theme_uiowa_events_teaser($variables){
+/**
+ * Theme function for an event teaser.
+ *
+ * @param array $variables
+ *    Variables from the event data.
+ *
+ * @return array $event
+ *    A render array of an event.
+ */
+function theme_uiowa_events_teaser($variables) {
   global $base_url;
   $external_link = $variables['external_link'];
-  $event = Array();
+  $event = array();
 
   $event['container'] = array(
     '#attributes' => array('class' => array('uiowa-event')),
@@ -83,25 +101,25 @@ function theme_uiowa_events_teaser($variables){
   );
 
   $title_link = '';
-  if($external_link) $title_link = '<h3><a href="http://events.uiowa.edu/event/'.$variables['event']['id'].'">'.$variables['event']['title'].'</a></h3>';
-  else $title_link = '<h3><a href="'.$base_url.'/event/'.$variables['event']['id'].'">'.$variables['event']['title'].'</a></h3>';
+  if ($external_link) $title_link = '<h3><a href="http://events.uiowa.edu/event/' . $variables['event']['id'] . '">' . $variables['event']['title'] . '</a></h3>';
+  else $title_link = '<h3><a href="' . $base_url . '/event/' . $variables['event']['id'] . '">' . $variables['event']['title'] . '</a></h3>';
   $event['container']['title'] = array(
     '#markup' => $title_link,
   );
 
   $date_string = '';
-  if($variables['event']['all_day']){
-    $date_string = date('n/j/Y',strtotime($variables['event']['start']));
+  if ($variables['event']['all_day']) {
+    $date_string = date('n/j/Y', strtotime($variables['event']['start']));
   }
-  else{
-    $date_string = date('n/j/Y - g:i a',strtotime($variables['event']['start']));
-    if(isset($e['end'])){
-      $date_string .= ' to '.date('g:i a',strtotime($variables['event']['end']));
+  else {
+    $date_string = date('n/j/Y - g:i a', strtotime($variables['event']['start']));
+    if (isset($e['end'])) {
+      $date_string .= ' to ' . date('g:i a', strtotime($variables['event']['end']));
     }
   }
 
   $event['container']['time'] = array(
-    '#markup' => '<p>'.$date_string.'</p>',
+    '#markup' => '<p>' . $date_string . '</p>',
   );
   return $event;
 

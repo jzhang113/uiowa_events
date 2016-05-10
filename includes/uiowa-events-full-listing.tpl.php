@@ -1,17 +1,16 @@
 <?php
-
 /**
- * @file
- * Template file for the full listing of events.
- */
-
- /**
+ * @file uiowa-events-full-listing.tpl.php
+ * Default theme implementation for the full listing of events.
+ *
+ * @see uiowa_events_full_listing()
+ *
  * Available variables:
  *
  * $title
- *   Sets the page title
+ *   Sets the page title.
  * $nav
- *   Date based navigation
+ *   Date based navigation.
  * $list
  *   Pre-formatted list of events.
  */

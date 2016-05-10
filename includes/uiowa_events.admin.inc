@@ -3,10 +3,11 @@
  * @file
  * Administrative form functions for the University of Iowa branding bar.
  */
+
 /**
- * Page callback: University of Iowa branding bar configuration form.
+ * Page callback: University of Iowa events configuration form.
  *
- * @see uiowa_bar_menu()
+ * @see uiowa_events_menu()
  */
 function uiowa_events_config_form($form, &$form_state) {
   $form['markup'] = array(
@@ -48,18 +49,18 @@ function uiowa_events_config_form($form, &$form_state) {
 /**
  * Implements validation from the Form API.
  *
- * @param $form
+ * @param array $form
  *   A structured array containing the elements and properties of the form.
- * @param $form_state
+ * @param array $form_state
  *   An array that stores information about the form's current state
  *   during processing.
  */
-function uiowa_events_config_form_validate($form, &$form_state){
+function uiowa_events_config_form_validate($form, &$form_state) {
   $minutes = $form_state['values']['uiowa_events_cache_time'];
-  if (!is_numeric($minutes)){
+  if (!is_numeric($minutes)) {
     form_set_error('uiowa_events_cache_time', t('You must enter a number for the minutes to cache data.'));
   }
-  elseif ($minutes < 5){
+  elseif ($minutes < 5) {
     form_set_error('uiowa_events_cache_time', t('Minimum cache limit is 5 minutes'));
   }
 }

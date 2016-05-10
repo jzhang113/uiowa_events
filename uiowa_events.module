@@ -1,32 +1,32 @@
 <?php
 /**
  * @file
- * This module handles the applicaiton logic for the University of Iowa Events module.
+ * Application logic for the University of Iowa Events module.
  */
 
  /**
- * Implements hook_permission().
- */
+  * Implements hook_permission().
+  */
 function uiowa_events_permission() {
   return array(
     'administer uiowa events' => array(
       'title' => t('Administer University of Iowa Events'),
       'description' => t('Perform administration tasks for the University of Iowa Events module.'),
-    )
+    ),
   );
 }
 
 /**
  * Implements hook_menu().
  */
- function uiowa_events_menu() {
+function uiowa_events_menu() {
 
-   $items['events'] = array(
-     'page callback' => 'uiowa_events_full_listing',
-     'access callback' => 'user_access',
-     'access arguments' => array('access content'),
-     'type' => MENU_CALLBACK,
-   );
+  $items['events'] = array(
+    'page callback' => 'uiowa_events_full_listing',
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
 
   $items['events/%'] = array(
     'page callback' => 'uiowa_events_full_listing',
@@ -60,10 +60,8 @@ function uiowa_events_permission() {
 
 /**
  * Function to display the full listing of events page.
- *
  */
-
- function uiowa_events_full_listing($date = null){
+function uiowa_events_full_listing($date = NULL) {
 
   $localist_url = "http://events.uiowa.edu/api/2/events";
 
@@ -72,120 +70,118 @@ function uiowa_events_permission() {
     'days' => '1',
   );
 
-  if($date) {
+  if ($date) {
     $parameters['start'] = $date;
   }
 
-  if(variable_get('uiowa_events_filter_id')) {
+  if (variable_get('uiowa_events_filter_id')) {
     $parameters['type'] = variable_get('uiowa_events_filter_id');
   }
 
   $page_date = '';
-  if($date) $page_date = $date;
+  if ($date) $page_date = $date;
   else $page_date = date('Y-m-d');
 
-  if (!cache_get('uiowa_events_full_listing'.$page_date )) {
-    $full_url = url($localist_url, array('query' => $parameters ));
+  if (!cache_get('uiowa_events_full_listing' . $page_date)) {
+    $full_url = url($localist_url, array('query' => $parameters));
     $localist_events = drupal_http_request($full_url);
-    cache_set('uiowa_events_full_listing'.$page_date , $localist_events, 'cache',  REQUEST_TIME  + (60 * variable_get('uiowa_events_cache_time')));
-    $events = json_decode($localist_events->data,true);
+    cache_set('uiowa_events_full_listing' . $page_date, $localist_events, 'cache', REQUEST_TIME + (60 * variable_get('uiowa_events_cache_time')));
+    $events = json_decode($localist_events->data, TRUE);
   }
   else {
-    $return = cache_get('uiowa_events_full_listing'.$page_date );
-    $events = json_decode($return->data->data,true);
+    $return = cache_get('uiowa_events_full_listing' . $page_date);
+    $events = json_decode($return->data->data, TRUE);
   }
 
-   $data = Array();
+  $data = array();
 
-   foreach($events['events'] as $event){
-     $new_event = Array();
-     if(isset($event['event']['id'])){
-       $new_event['id'] = $event['event']['id'];
-     }
-     if(isset($event['event']['title'])){
-       $new_event['title'] = $event['event']['title'];
-     }
-     if(isset($event['event']['description'])){
-       $new_event['description'] = $event['event']['description'];
-     }
-     if(isset($event['event']['event_instances'][0]['event_instance']['start'])){
-       $new_event['start'] = $event['event']['event_instances'][0]['event_instance']['start'];
-     }
-     if(isset($event['event']['event_instances'][0]['event_instance']['end'])){
-       $new_event['end'] = $event['event']['event_instances'][0]['event_instance']['end'];
-     }
-     if(isset($event['event']['event_instances'][0]['event_instance']['all_day'])){
-       $new_event['all_day'] = $event['event']['event_instances'][0]['event_instance']['all_day'];
-     }
-     if(isset($event['event']['photo_url'])){
-       $new_event['photo'] = $event['event']['photo_url'];
-     }
-     if(isset($event['event']['location'])){
-       $new_event['location'] = $event['event']['location'];
-     }
-     if(isset($event['event']['room_number'])){
-       $new_event['room_number'] = $event['event']['room_number'];
-     }
-     array_push($data,$new_event);
-   }
-   $uiowa_events_path = drupal_get_path('module', 'uiowa_events') . '/includes';
-   include_once DRUPAL_ROOT . '/' . $uiowa_events_path . '/uiowa_events.full_listing.inc';
-   return theme('uiowa_events_full_listing', array('data' => $data, 'title' => 'Events', 'date' => $page_date));
- }
-
- /**
-  * Function to display an individual event page.
-  *
-  */
-
-  function uiowa_events_single_event($event_id){
-    // If the configuration is to link out, make all event pages 404
-    if(variable_get('uiowa_events_event_link') == 'event-link-external') drupal_not_found();
-    else{
-      $localist_url = "http://events.uiowa.edu/api/2/events/".$event_id;
-
-      if (!cache_get('uiowa_events_single_event'.$event_id )) {
-        $localist_event = drupal_http_request($localist_url);
-        cache_set('uiowa_events_single_event'.$event_id , $localist_event, 'cache',  REQUEST_TIME  + (60 * variable_get('uiowa_events_cache_time')));
-        $data = json_decode($localist_event->data,true);
-      }
-      else {
-        $return = cache_get('uiowa_events_single_event'.$event_id );
-        $data = json_decode($return->data->data,true);
-      }
-      drupal_add_css(drupal_get_path('module', 'uiowa_events') . '/single.css');
-      drupal_add_js(drupal_get_path('module', 'uiowa_events') . '/js/single-event.js');
-      $uiowa_events_path = drupal_get_path('module', 'uiowa_events') . '/includes';
-      include_once DRUPAL_ROOT . '/' . $uiowa_events_path . '/uiowa_events.single_event.inc';
-      return theme('uiowa_events_single_event', array('data' => $data['event'], 'title' => $data['event']['title']));
+  foreach ($events['events'] as $event) {
+    $new_event = array();
+    if (isset($event['event']['id'])) {
+      $new_event['id'] = $event['event']['id'];
     }
+    if (isset($event['event']['title'])) {
+      $new_event['title'] = $event['event']['title'];
+    }
+    if (isset($event['event']['description'])) {
+      $new_event['description'] = $event['event']['description'];
+    }
+    if (isset($event['event']['event_instances'][0]['event_instance']['start'])) {
+      $new_event['start'] = $event['event']['event_instances'][0]['event_instance']['start'];
+    }
+    if (isset($event['event']['event_instances'][0]['event_instance']['end'])) {
+      $new_event['end'] = $event['event']['event_instances'][0]['event_instance']['end'];
+    }
+    if (isset($event['event']['event_instances'][0]['event_instance']['all_day'])) {
+      $new_event['all_day'] = $event['event']['event_instances'][0]['event_instance']['all_day'];
+    }
+    if (isset($event['event']['photo_url'])) {
+      $new_event['photo'] = $event['event']['photo_url'];
+    }
+    if (isset($event['event']['location'])) {
+      $new_event['location'] = $event['event']['location'];
+    }
+    if (isset($event['event']['room_number'])) {
+      $new_event['room_number'] = $event['event']['room_number'];
+    }
+    array_push($data, $new_event);
   }
+  $uiowa_events_path = drupal_get_path('module', 'uiowa_events') . '/includes';
+  include_once DRUPAL_ROOT . '/' . $uiowa_events_path . '/uiowa_events.full_listing.inc';
+  return theme('uiowa_events_full_listing', array('data' => $data, 'title' => 'Events', 'date' => $page_date));
+}
 
- /**
+/**
+ * Function to display an individual event page.
+ */
+function uiowa_events_single_event($event_id) {
+  // If the configuration is to link out, make all event pages 404.
+  if (variable_get('uiowa_events_event_link') == 'event-link-external') drupal_not_found();
+  else {
+    $localist_url = "http://events.uiowa.edu/api/2/events/" . $event_id;
+
+    if (!cache_get('uiowa_events_single_event' . $event_id)) {
+      $localist_event = drupal_http_request($localist_url);
+      cache_set('uiowa_events_single_event' . $event_id, $localist_event, 'cache', REQUEST_TIME + (60 * variable_get('uiowa_events_cache_time')));
+      $data = json_decode($localist_event->data, TRUE);
+    }
+    else {
+      $return = cache_get('uiowa_events_single_event' . $event_id);
+      $data = json_decode($return->data->data, TRUE);
+    }
+    drupal_add_css(drupal_get_path('module', 'uiowa_events') . '/single.css');
+    drupal_add_js(drupal_get_path('module', 'uiowa_events') . '/js/single-event.js');
+    $uiowa_events_path = drupal_get_path('module', 'uiowa_events') . '/includes';
+    include_once DRUPAL_ROOT . '/' . $uiowa_events_path . '/uiowa_events.single_event.inc';
+    return theme('uiowa_events_single_event', array('data' => $data['event'], 'title' => $data['event']['title']));
+  }
+}
+
+/**
  * Implements hook_theme().
  */
+function uiowa_events_theme() {
+  $path = drupal_get_path('module', 'uiowa_events') . '/includes';
 
- function uiowa_events_theme() {
-   $path = drupal_get_path('module', 'uiowa_events') . '/includes';
-   $themes = array (
-       'uiowa_events_full_listing' => array(
-         'path' => $path,
-         'file' => 'uiowa_events.full_listing.inc',
-         'template' => 'uiowa-events-full-listing',
-         'variables' => array('data' => NULL),
-       ),
-       'uiowa_events_single_event' => array(
-         'path' => $path,
-         'file' => 'uiowa_events.single_event.inc',
-         'template' => 'uiowa-events-single-event',
-         'variables' => array('data' => NULL),
-       ),
-       'uiowa_events_teaser' => array(
-         'variables' => array('data' => NULL),
-       ),
-       'uiowa_events_full_listing_date_nav' => array(
-         'variables' => array('date' => NULL),
-       ),
-   );
-   return $themes;
- }
+  $themes = array(
+    'uiowa_events_full_listing' => array(
+      'path' => $path,
+      'file' => 'uiowa_events.full_listing.inc',
+      'template' => 'uiowa-events-full-listing',
+      'variables' => array('data' => NULL),
+    ),
+    'uiowa_events_single_event' => array(
+      'path' => $path,
+      'file' => 'uiowa_events.single_event.inc',
+      'template' => 'uiowa-events-single-event',
+      'variables' => array('data' => NULL),
+    ),
+    'uiowa_events_teaser' => array(
+      'variables' => array('data' => NULL),
+    ),
+    'uiowa_events_full_listing_date_nav' => array(
+      'variables' => array('date' => NULL),
+    ),
+  );
+  return $themes;
+}
