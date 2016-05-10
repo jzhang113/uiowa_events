@@ -15,5 +15,5 @@
  *   Pre-formatted list of events.
  */
 ?>
-<?php print $nav; ?>
+<?php print render($nav); ?>
 <?php print $list; ?>

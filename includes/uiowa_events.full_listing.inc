@@ -73,8 +73,7 @@ function theme_uiowa_events_full_listing_date_nav($variables) {
     '#suffix' => '</ul>',
   );
 
-  $output = drupal_render($nav);
-  return $output;
+  return $nav;
 }
 
 /**
