@@ -79,8 +79,12 @@ function uiowa_events_full_listing($date = NULL) {
   }
 
   $page_date = '';
-  if ($date) $page_date = $date;
-  else $page_date = date('Y-m-d');
+  if ($date) {
+    $page_date = $date;
+  }
+  else {
+    $page_date = date('Y-m-d');
+  }
 
   if (!cache_get('uiowa_events_full_listing' . $page_date)) {
     $full_url = url($localist_url, array('query' => $parameters));
@@ -136,7 +140,9 @@ function uiowa_events_full_listing($date = NULL) {
  */
 function uiowa_events_single_event($event_id) {
   // If the configuration is to link out, make all event pages 404.
-  if (variable_get('uiowa_events_event_link') == 'event-link-external') drupal_not_found();
+  if (variable_get('uiowa_events_event_link') == 'event-link-external') {
+    drupal_not_found();
+  }
   else {
     $localist_url = "http://events.uiowa.edu/api/2/events/" . $event_id;
 

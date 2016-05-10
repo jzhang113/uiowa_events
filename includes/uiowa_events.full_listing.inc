@@ -22,7 +22,9 @@ function template_preprocess_uiowa_events_full_listing(&$variables) {
   );
 
   $external_link = FALSE;
-  if (variable_get('uiowa_events_event_link') == 'event-link-external') $external_link = TRUE;
+  if (variable_get('uiowa_events_event_link') == 'event-link-external') {
+    $external_link = TRUE;
+  }
 
   $items = array();
   $items['events'] = array(
@@ -101,8 +103,12 @@ function theme_uiowa_events_teaser($variables) {
   );
 
   $title_link = '';
-  if ($external_link) $title_link = '<h3><a href="http://events.uiowa.edu/event/' . $variables['event']['id'] . '">' . $variables['event']['title'] . '</a></h3>';
-  else $title_link = '<h3><a href="' . $base_url . '/event/' . $variables['event']['id'] . '">' . $variables['event']['title'] . '</a></h3>';
+  if ($external_link) {
+    $title_link = '<h3><a href="http://events.uiowa.edu/event/' . $variables['event']['id'] . '">' . $variables['event']['title'] . '</a></h3>';
+  }
+  else {
+    $title_link = '<h3><a href="' . $base_url . '/event/' . $variables['event']['id'] . '">' . $variables['event']['title'] . '</a></h3>';
+  }
   $event['container']['title'] = array(
     '#markup' => $title_link,
   );
