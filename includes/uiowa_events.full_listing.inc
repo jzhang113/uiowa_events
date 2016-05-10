@@ -58,7 +58,7 @@ function theme_uiowa_events_full_listing_date_nav($variables) {
   $nav['pagination'] = array(
     '#prefix' => '<ul class="pagination">',
     '#markup' => '  <li>
-                      <a href="' . $base_url . '/events/' . date('Y-m-d', strtotime("-1 days", strtotime($page_date))) . '" aria-label="Previous">
+                      <a href="' . $base_url . '/events/day/' . date('Y-m-d', strtotime("-1 days", strtotime($page_date))) . '" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                       </a>
                     </li>
@@ -66,7 +66,7 @@ function theme_uiowa_events_full_listing_date_nav($variables) {
                         <a href="#">' . date('l, F j', strtotime($page_date)) . '</a>
                     </li>
                     <li>
-                      <a href="' . $base_url . '/events/' . date('Y-m-d', strtotime("+1 days", strtotime($page_date))) . '" aria-label="Next">
+                      <a href="' . $base_url . '/events/day/' . date('Y-m-d', strtotime("+1 days", strtotime($page_date))) . '" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                       </a>
                     </li>',

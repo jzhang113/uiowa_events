@@ -22,18 +22,37 @@ function uiowa_events_permission() {
 function uiowa_events_menu() {
 
   $items['events'] = array(
+    'title' => 'Events',
     'page callback' => 'uiowa_events_full_listing',
     'access callback' => 'user_access',
     'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['events/%'] = array(
-    'page callback' => 'uiowa_events_full_listing',
-    'page arguments' => array(1),
+  $items['events/day/%day_date'] = array(
+    'title' => 'Day',
+    'page arguments' => array(2),
     'access callback' => 'user_access',
     'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  $items['events/week/%week_date'] = array(
+    'title' => 'Week',
+    'page arguments' => array('week', 2),
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+
+  $items['events/month/%month_date'] = array(
+    'title' => 'Month',
+    'page arguments' => array('month', 2),
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
   );
 
   $items['event/%'] = array(
@@ -57,25 +76,95 @@ function uiowa_events_menu() {
   return $items;
 }
 
+/**
+ * Load week menu arguments.
+ *
+ * @param string $arg
+ *    The initial argument.
+ *
+ * @return string
+ *    The expected argument.
+ */
+function week_date_to_arg($arg) {
+  if (empty($arg) || $arg == '%') {
+    return date('Y-m-d', strtotime('sunday last week'));
+  }
+  else {
+    return date('Y-m-d', strtotime('sunday last week', strtotime($arg)));
+  }
+}
 
 /**
- * Function to display the full listing of events page.
+ * Load month menu arguments.
+ *
+ * @param string $arg
+ *    The initial argument.
+ *
+ * @return string
+ *    The expected argument.
  */
-function uiowa_events_full_listing($date = NULL) {
+function month_date_to_arg($arg) {
+  if (empty($arg) || $arg == '%') {
+    return date('Y-m-d', strtotime('first day of this month'));
+  }
+  else {
+    return date('Y-m-d', strtotime('first day of this month', strtotime($arg)));
+  }
+}
+
+/**
+ * Load and return events from Localist.
+ *
+ * @todo Pass a parameter array in.
+ *
+ * @param string $days
+ *    Return events within this many days after start.
+ *    Cannot be used with end.
+ * @param string $type
+ *    Limit events to filter item IDs.
+ * @param string $start
+ *    Start of range. Specified as YYYY-MM-DD.
+ * @param string $end
+ *    End of range, but does not include this date. Specified as YYYY-MM-DD.
+ *
+ * @return object
+ *    A request object.
+ */
+function uiowa_events_load($days = NULL, $type = NULL, $start = NULL, $end = NULL) {
 
   $localist_url = "http://events.uiowa.edu/api/2/events";
 
   $parameters = array(
     'pp' => '50',
-    'days' => '1',
   );
 
-  if ($date) {
-    $parameters['start'] = $date;
+  if (!empty($type)) {
+    $parameters['type'] = $type;
   }
 
+  if (!empty($start)) {
+    $parameters['start'] = $start;
+  }
+
+  if (!empty($end)) {
+    $parameters['end'] = $end;
+  }
+
+  if (!empty($days)) {
+    $parameters['days'] = $days;
+  }
+
+  $full_url = url($localist_url, array('query' => $parameters));
+  return drupal_http_request($full_url);
+}
+
+/**
+ * Function to display the full listing of events page.
+ */
+function uiowa_events_full_listing($length = 'day', $date = NULL) {
+
   if (variable_get('uiowa_events_filter_id')) {
-    $parameters['type'] = variable_get('uiowa_events_filter_id');
+    $type = variable_get('uiowa_events_filter_id');
   }
 
   $page_date = '';
@@ -86,14 +175,32 @@ function uiowa_events_full_listing($date = NULL) {
     $page_date = date('Y-m-d');
   }
 
-  if (!cache_get('uiowa_events_full_listing' . $page_date)) {
-    $full_url = url($localist_url, array('query' => $parameters));
-    $localist_events = drupal_http_request($full_url);
-    cache_set('uiowa_events_full_listing' . $page_date, $localist_events, 'cache', REQUEST_TIME + (60 * variable_get('uiowa_events_cache_time')));
+  if (!cache_get('uiowa_events_full_listing_' . $length . "_" . $page_date)) {
+    switch ($length) {
+      case 'day':
+        $localist_events = uiowa_events_load($days = 1, $type, $start = $page_date);
+        break;
+
+      case 'week':
+        $localist_events = uiowa_events_load($days = 7, $type, $start = $page_date);
+        break;
+
+      case 'month':
+
+        $end = date('Y-m-d', strtotime('first day of next month'));
+
+        $localist_events = uiowa_events_load(NULL, $type, $date, $end);
+        break;
+
+      default:
+        break;
+    }
+
+    cache_set('uiowa_events_full_listing_' . $length . "_" . $page_date, $localist_events, 'cache', REQUEST_TIME + (60 * variable_get('uiowa_events_cache_time')));
     $events = json_decode($localist_events->data, TRUE);
   }
   else {
-    $return = cache_get('uiowa_events_full_listing' . $page_date);
+    $return = cache_get('uiowa_events_full_listing_' . $length . "_" . $page_date);
     $events = json_decode($return->data->data, TRUE);
   }
 
