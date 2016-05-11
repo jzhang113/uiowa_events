@@ -42,7 +42,7 @@ function template_preprocess_uiowa_events_full_listing(&$variables) {
     );
   }
 
-  $variables['list'] = drupal_render($items);;
+  $variables['list'] = $items;
 }
 
 /**

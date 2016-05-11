@@ -7,8 +7,6 @@
  *
  * Available variables:
  *
- * $title
- *   Sets the page title.
  * $nav
  *   Date based navigation.
  * $list
@@ -16,4 +14,4 @@
  */
 ?>
 <?php print render($nav); ?>
-<?php print $list; ?>
+<?php print render($list); ?>
