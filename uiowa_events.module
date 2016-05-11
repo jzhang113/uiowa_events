@@ -167,22 +167,33 @@ function uiowa_events_full_listing($length = 'day', $date = NULL) {
     $type = variable_get('uiowa_events_filter_id');
   }
 
-  $page_date = '';
-  if ($date) {
-    $page_date = $date;
-  }
-  else {
-    $page_date = date('Y-m-d');
-  }
-
-  if (!cache_get('uiowa_events_full_listing_' . $length . "_" . $page_date)) {
+  if (empty($date)) {
     switch ($length) {
       case 'day':
-        $localist_events = uiowa_events_load($days = 1, $type, $start = $page_date);
+        $date = date('Y-m-d');
         break;
 
       case 'week':
-        $localist_events = uiowa_events_load($days = 7, $type, $start = $page_date);
+        $date = date('Y-m-d', strtotime('last sunday'));
+        break;
+
+      case 'month':
+        $date = date('Y-m-d', strtotime('first day of this month'));
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  if (!cache_get('uiowa_events_full_listing_' . $length . "_" . $date)) {
+    switch ($length) {
+      case 'day':
+        $localist_events = uiowa_events_load($days = 1, $type, $start = $date);
+        break;
+
+      case 'week':
+        $localist_events = uiowa_events_load($days = 7, $type, $start = $date);
         break;
 
       case 'month':
@@ -196,11 +207,11 @@ function uiowa_events_full_listing($length = 'day', $date = NULL) {
         break;
     }
 
-    cache_set('uiowa_events_full_listing_' . $length . "_" . $page_date, $localist_events, 'cache', REQUEST_TIME + (60 * variable_get('uiowa_events_cache_time')));
+    cache_set('uiowa_events_full_listing_' . $length . "_" . $date, $localist_events, 'cache', REQUEST_TIME + (60 * variable_get('uiowa_events_cache_time')));
     $events = json_decode($localist_events->data, TRUE);
   }
   else {
-    $return = cache_get('uiowa_events_full_listing_' . $length . "_" . $page_date);
+    $return = cache_get('uiowa_events_full_listing_' . $length . "_" . $date);
     $events = json_decode($return->data->data, TRUE);
   }
 
@@ -243,7 +254,7 @@ function uiowa_events_full_listing($length = 'day', $date = NULL) {
   $variables = array(
     'data' => $data,
     'title' => 'Events',
-    'date' => $page_date,
+    'date' => $date,
     'length' => $length,
   );
   return theme('uiowa_events_full_listing', $variables);
