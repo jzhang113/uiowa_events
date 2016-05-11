@@ -4,6 +4,8 @@ Drupal module to provide dynamic views from the University of Iowa events promot
 ## Installation
 Install the module per usual Drupal module installation instructions.
 
+There are currently no dependencies.
+
 ## Configuration
 An configuration form is available at Admin > Configuration > User Interface >
 University of Iowa Events (admin/config/user-interface/uiowa-events)
