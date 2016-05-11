@@ -187,7 +187,7 @@ function uiowa_events_full_listing($length = 'day', $date = NULL) {
 
       case 'month':
 
-        $end = date('Y-m-d', strtotime('first day of next month'));
+        $end = date('Y-m-d', strtotime('first day of next month', strtotime($date)));
 
         $localist_events = uiowa_events_load(NULL, $type, $date, $end);
         break;
@@ -239,7 +239,56 @@ function uiowa_events_full_listing($length = 'day', $date = NULL) {
   }
   $uiowa_events_path = drupal_get_path('module', 'uiowa_events') . '/includes';
   include_once DRUPAL_ROOT . '/' . $uiowa_events_path . '/uiowa_events.full_listing.inc';
-  return theme('uiowa_events_full_listing', array('data' => $data, 'title' => 'Events', 'date' => $page_date));
+
+  $variables = array(
+    'data' => $data,
+    'title' => 'Events',
+    'date' => $page_date,
+    'length' => $length,
+  );
+  return theme('uiowa_events_full_listing', $variables);
+}
+
+/**
+ * Build the next and previous navigation controls.
+ *
+ * @param string $granularity
+ *    The granularity - either day, week, or month.
+ * @param string $date
+ *    The active date, in php Y-m-d format.
+ *
+ * @return array
+ *    The array of previous, next, and current label.
+ */
+function _uiowa_events_nav_control($granularity, $date) {
+  $nav_values = array();
+
+  $prefix = '/events/' . $granularity . '/';
+
+  switch ($granularity) {
+    case 'day':
+      $nav_values['previous'] = $prefix . date('Y-m-d', strtotime("-1 days", strtotime($date)));
+      $nav_values['next'] = $prefix . date('Y-m-d', strtotime("+1 days", strtotime($date)));
+      $nav_values['label'] = date('l, F j', strtotime($date));
+      break;
+
+    case 'week':
+      $nav_values['previous'] = $prefix . date('Y-m-d', strtotime("-1 sunday", strtotime($date)));
+      $nav_values['next'] = $prefix . date('Y-m-d', strtotime("sunday this week", strtotime($date)));
+      $nav_values['label'] = t('Week of @date', array('@date' => date('l, F j', strtotime($date))));
+      break;
+
+    case 'month':
+      $nav_values['previous'] = $prefix . date('Y-m-d', strtotime("first day of last month", strtotime($date)));
+      $nav_values['next'] = $prefix . date('Y-m-d', strtotime("first day of next month", strtotime($date)));
+      $nav_values['label'] = date('F Y', strtotime($date));
+      break;
+
+    default:
+      break;
+  }
+
+  return $nav_values;
 }
 
 /**
