@@ -15,16 +15,13 @@ function uiowa_events_config_form($form, &$form_state) {
     '#markup' => t('<p>These settings let you configure the University of Iowa Events module.</p>'),
   );
 
-  $form['uiowa_events_filter_id'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Events Filter ID'),
-    '#default_value' => variable_get('uiowa_events_filter_id'),
-    '#description' => t('Enter the filter ID for the events to display.'),
-    '#size' => 60,
-    '#required' => FALSE,
+  $form['global'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Site-wide settings'),
+    '#description' => t('These settings affect all University of Iowa event lists and single instances.'),
   );
 
-  $form['uiowa_events_event_link'] = array(
+  $form['global']['uiowa_events_event_link'] = array(
     '#type' => 'select',
     '#title' => t('Link Option'),
     '#default_value' => variable_get('uiowa_events_event_link'),
@@ -35,7 +32,7 @@ function uiowa_events_config_form($form, &$form_state) {
     ),
   );
 
-  $form['uiowa_events_cache_time'] = array(
+  $form['global']['uiowa_events_cache_time'] = array(
     '#type' => 'textfield',
     '#title' => t('Events Caching'),
     '#default_value' => variable_get('uiowa_events_cache_time'),
@@ -43,6 +40,22 @@ function uiowa_events_config_form($form, &$form_state) {
     '#size' => 60,
     '#required' => TRUE,
   );
+
+  $form['page'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Main events page settings'),
+    '#description' => t('These settings affect the main University of Iowa event list at /events.'),
+  );
+
+  $form['page']['uiowa_events_filter_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Events Filter ID'),
+    '#default_value' => variable_get('uiowa_events_filter_id'),
+    '#description' => t('Enter the filter ID for the events to display.'),
+    '#size' => 60,
+    '#required' => FALSE,
+  );
+
   return system_settings_form($form);
 }
 
