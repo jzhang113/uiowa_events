@@ -31,10 +31,10 @@ function uiowa_events_menu() {
 
   $items['events/day/%day_date'] = array(
     'title' => 'Day',
-    'page arguments' => array(2),
+    'page arguments' => array('day', 2),
     'access callback' => 'user_access',
     'access arguments' => array('access content'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'type' => MENU_LOCAL_TASK,
   );
 
   $items['events/week/%week_date'] = array(
@@ -55,6 +55,11 @@ function uiowa_events_menu() {
     'weight' => 2,
   );
 
+  // Determine which tab is the default tab.
+  $granularity = variable_get('uiowa_events_default_tab', 'day');
+  $default_tab = 'events/' . $granularity . '/%' . $granularity . '_date';
+  $items[$default_tab]['type'] = MENU_DEFAULT_LOCAL_TASK;
+
   $items['event/%'] = array(
     'page callback' => 'uiowa_events_single_event',
     'page arguments' => array(1),
@@ -74,6 +79,20 @@ function uiowa_events_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Load day menu arguments.
+ *
+ * @param string $arg
+ *    The initial argument.
+ *
+ * @return string
+ *    The expected argument.
+ */
+function day_date_to_arg($arg) {
+  // If our argument is not provided, give a default of today.
+  return (empty($arg) || $arg == '%') ? date('Y-m-d') : $arg;
 }
 
 /**
@@ -161,7 +180,10 @@ function uiowa_events_load($days = NULL, $type = NULL, $start = NULL, $end = NUL
 /**
  * Function to display the full listing of events page.
  */
-function uiowa_events_full_listing($length = 'day', $date = NULL) {
+function uiowa_events_full_listing($length = NULL, $date = NULL) {
+  if (empty($length)) {
+    $length = variable_get('uiowa_events_default_tab', 'day');
+  }
 
   if (variable_get('uiowa_events_filter_id')) {
     $type = variable_get('uiowa_events_filter_id');

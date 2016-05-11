@@ -56,6 +56,19 @@ function uiowa_events_config_form($form, &$form_state) {
     '#required' => FALSE,
   );
 
+  $form['page']['uiowa_events_default_tab'] = array(
+    '#type' => 'select',
+    '#title' => t('Default menu tab'),
+    '#options' => array(
+      'day' => t('Day'),
+      'week' => t('Week'),
+      'month' => t('Month'),
+    ),
+    '#default_value' => variable_get('uiowa_events_default_tab', 'day'),
+    '#description' => t('Select the tab to display when visiting the page. Note, if you change this setting, you will need to do a menu cache clear.'),
+    '#required' => TRUE,
+  );
+
   return system_settings_form($form);
 }
 
