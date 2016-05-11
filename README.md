@@ -16,7 +16,7 @@ This configuration form provides site-wide and main event page options.
 * Choose to link off to localist or cache an event as a page on the site.
 * Number of minutes event data should be cached. Minimum of 5 minutes.
 
-# Main events page settings
+### Main events page settings
 * Events Filter ID
 * Determine if you would like the day, week or month tab to be the default
 option when visiting the page.
