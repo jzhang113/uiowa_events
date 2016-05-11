@@ -30,12 +30,12 @@ function uiowa_events_uninstall() {
  * Create initial uiowa_events variables if they do not already exist.
  */
 function uiowa_events_update_7000() {
-  if (empty(variable_get('uiowa_events_event_link'))) {
+  if (variable_get('uiowa_events_event_link') == NULL) {
     // Set the link type to link to Localist.
     variable_set('uiowa_events_event_link', 'event-link-external');
   }
 
-  if (empty(variable_get('uiowa_events_cache_time'))) {
+  if (variable_get('uiowa_events_event_link') == NULL) {
     // Set the default cache time in minutes.
     variable_set('uiowa_events_cache_time', '60');
   }
