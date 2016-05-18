@@ -5,7 +5,7 @@
  */
 
 /**
- * Create FAQ page if set to show the answer in a new page.
+ * Create full listing page.
  *
  * @param array &$variables
  *   Array reference of arguments given to the theme() function.
