@@ -11,14 +11,12 @@
  *   Array reference of arguments given to the theme() function.
  */
 function template_preprocess_uiowa_events_full_listing(&$variables) {
-  $data = $variables['data'];
-  $date = $variables['date'];
   drupal_set_title($variables['title']);
 
   $variables['nav'] = theme('uiowa_events_full_listing_date_nav',
     array(
-      'date' => $date,
-      'nav_items' => _uiowa_events_nav_control($variables['length'], $date),
+      'date' => $variables['data'],
+      'nav_items' => _uiowa_events_nav_control($variables['length'], $variables['date']),
     )
   );
 
@@ -33,7 +31,7 @@ function template_preprocess_uiowa_events_full_listing(&$variables) {
     '#type' => 'container',
   );
 
-  foreach ($data as $e) {
+  foreach ($variables['data'] as $e) {
     $items['events'][] = theme('uiowa_events_teaser',
       array(
         'event' => $e,
