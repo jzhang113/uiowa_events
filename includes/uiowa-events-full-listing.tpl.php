@@ -14,4 +14,6 @@
  */
 ?>
 <?php print render($nav); ?>
-<?php print render($list); ?>
+<div class="uiowa-events">
+  <?php print render($list); ?>
+</div>

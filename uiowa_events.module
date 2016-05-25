@@ -375,7 +375,10 @@ function uiowa_events_theme() {
       'variables' => array('data' => NULL),
     ),
     'uiowa_events_teaser' => array(
-      'variables' => array('data' => NULL),
+      'path' => $path,
+      'file' => 'uiowa_events.teaser.inc',
+      'template' => 'uiowa-events-teaser',
+      'variables' => array('event' => NULL, 'external_link' => NULL),
     ),
     'uiowa_events_full_listing_date_nav' => array(
       'variables' => array('date' => NULL),
