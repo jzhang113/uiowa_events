@@ -52,7 +52,7 @@
       print theme('imagecache_external', array(
         'path' => $data['photo_url'],
         'style_name' => 'medium',
-        'alt' => 'Druplicon',
+        'alt' => t('@title promotional image', array('@title' => $data['title'])),,
       ));
     ?>
     <a href="http://events.uiowa.edu/event/<?php print $data['id'] ?>" role="button" class="btn btn-primary active">View on Event Calendar</a>
