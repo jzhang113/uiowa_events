@@ -16,5 +16,5 @@
 <div class="uiowa-event">
   <?php print render($variables['event']['image']); ?>
   <h3><a href="<?php print $variables['event']['url']; ?>"><?php print $variables['event']['title']; ?></a></h3>
-  <p><?php print render($variables['event']['date_string']); ?></p>
+  <p class="date-string"><?php print render($variables['event']['date_string']); ?></p>
 </div>
