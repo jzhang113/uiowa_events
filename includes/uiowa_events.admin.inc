@@ -71,7 +71,7 @@ function uiowa_events_config_form($form, &$form_state) {
 
   $form['page']['uiowa_events_add_event_link'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Add Event'),
+    '#title' => t('Add Event Link'),
     '#default_value' => variable_get('uiowa_events_add_event_link'),
     '#description' => t('Show an "Add Your Event" link on the page.'),
   );
