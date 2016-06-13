@@ -13,6 +13,22 @@
 function template_preprocess_uiowa_events_full_listing(&$variables) {
   drupal_set_title($variables['title']);
 
+  $variables['add_link'] = '';
+
+  if (variable_get('uiowa_events_add_event_link')) {
+    $variables['add_link'] = array(
+      '#theme' => 'link',
+      '#text' => t('Add Your Event'),
+      '#path' => 'http://events.uiowa.edu/event/create',
+      '#options' => array(
+        'attributes' => array(
+          'class' => array('uiowa-events-add-link'),
+          'target' => '_blank',
+        ),
+      ),
+    );
+  }
+
   $variables['nav'] = theme('uiowa_events_full_listing_date_nav',
     array(
       'date' => $variables['data'],

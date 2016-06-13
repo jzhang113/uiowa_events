@@ -9,11 +9,18 @@
  *
  * $nav
  *   Date based navigation.
+ * $add_link
+ *   An "Add Your Event" link.
  * $list
  *   Pre-formatted list of events.
  */
 ?>
 <?php print render($nav); ?>
+<?php if (!empty($add_link)): ?>
+  <div class="uiowa-events-add-link-wrapper">
+    <?php print render($add_link); ?>
+  </div>
+<?php endif; ?>
 <div class="uiowa-events">
   <?php print render($list); ?>
 </div>

@@ -24,6 +24,8 @@ function uiowa_events_uninstall() {
   variable_del('uiowa_events_event_link');
   // Delete the cache time.
   variable_del('uiowa_events_cache_time');
+  // Delete the add link variable.
+  variable_del('uiowa_events_add_event_link');
 }
 
 /**
