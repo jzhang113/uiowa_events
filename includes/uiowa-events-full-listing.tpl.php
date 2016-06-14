@@ -15,10 +15,12 @@
  *   Pre-formatted list of events.
  */
 ?>
-<?php print render($nav); ?>
-<?php if (!empty($add_link)): ?>
-     <?php print render($add_link); ?>
-<?php endif; ?>
-<div class="uiowa-events">
-  <?php print render($list); ?>
+<div class="uiowa-events-page">
+  <?php if (!empty($add_link)): ?>
+       <?php print render($add_link); ?>
+  <?php endif; ?>
+  <?php print render($nav); ?>
+  <div class="uiowa-events">
+    <?php print render($list); ?>
+  </div>
 </div>
