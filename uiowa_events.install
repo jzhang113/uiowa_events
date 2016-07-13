@@ -29,6 +29,78 @@ function uiowa_events_uninstall() {
 }
 
 /**
+ * Implements hook_field_schema().
+ *
+ */
+function uiowa_events_field_schema($field) {
+  $columns = array(
+    'pp' => array(
+      'type' => 'int',
+      'length' => 2,
+    ),
+    'days' => array(
+      'type' => 'int',
+      'length' => 3,
+    ),
+    'match' => array(
+      'type' => 'varchar',
+      'length' => 3,
+    ),
+    'featured' => array(
+      'type' => 'int',
+      'size' => 'tiny',
+    ),
+    'sponsored' => array(
+      'type' => 'int',
+      'size' => 'tiny',
+    ),
+    'keyword' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+    'event_types' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+    'departments' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+    'audience' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+    'general_interest' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+    'venues' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+    'excluded_event_types' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+    'excluded_departments' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+    'excluded_audience' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+    'excluded_general_interest' => array(
+      'type' => 'varchar',
+      'length' => 256,
+    ),
+  );
+  return array(
+    'columns' => $columns,
+  );
+}
+
+/**
  * Create initial uiowa_events variables if they do not already exist.
  */
 function uiowa_events_update_7000() {

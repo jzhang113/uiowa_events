@@ -4,6 +4,8 @@
  * Application logic for the University of Iowa Events module.
  */
 
+module_load_include('inc', 'uiowa_events', 'includes/uiowa_events.field');
+
  /**
   * Implements hook_permission().
   */
@@ -129,6 +131,74 @@ function month_date_to_arg($arg) {
   else {
     return date('Y-m-d', strtotime('first day of this month', strtotime($arg)));
   }
+}
+
+/**
+ * Helper function for decoding JSON.
+ *
+ * @param string $uri
+ *   The JSON feed.
+ *
+ * @return array
+ *   The retrieved data.
+ */
+function _uiowa_events_decode($uri) {
+  $decode_content = drupal_http_request($uri);
+  $decode_array = drupal_json_decode($decode_content->data);
+  return $decode_array;
+}
+
+/**
+ * Load and return filters from Localist.
+ * @todo  cache this.
+ * @return array Filters
+ */
+function uiowa_events_get_filters() {
+  $url = "http://events.uiowa.edu/api/2/events/filters";
+  $results = _uiowa_events_decode($url);
+  $query_data = array();
+  // Get a handle on each filter grouping (Department, event types, etc.)
+  foreach ($results as $result => $items) {
+    $query_data[$result] = array();
+    foreach ($items as $item) {
+      // Add each filter term to its group, using the terms ID as the key
+      // and the name as the value.
+      $query_data[$result][$item["id"]] = $item["name"];
+    }
+    // Order the filter terms in each group alphabetically.
+    asort($query_data[$result]);
+  }
+  return $query_data;
+}
+
+/**
+ * Load and return places from Localist.
+ * @todo cache this.
+ * @return array Places
+ */
+function uiowa_events_get_places() {
+  $url = "http://events.uiowa.edu/api/2/places?pp=100";
+  // Grab the JSON decoded data.
+  $results = _uiowa_events_decode($url);
+  // Get the places array.
+  $places_data = $results["places"];
+  // Initialize the page number and the URL for the second page.
+  $page_number = 2;
+  $url = $url . "&page=2";
+  // Loop through all the pages, combining the data until we're out of pages.
+  while ($page_number <= $results["page"]["total"]) {
+    $results = _uiowa_events_decode($url);
+    $places_data = array_merge($places_data, $results["places"]);
+    $page_number++;
+    $url = "http://events.uiowa.edu/api/2/places?pp=100&page=" . strval($page_number);
+  }
+  $select_list_data = array();
+  // Create an array to be used for the select list, where the key is
+  // the urlname of the place and the value is the actual place name.
+  foreach ($places_data as $place) {
+    $select_list_data[$place["place"]["urlname"]] = $place["place"]["name"];
+  }
+  return $select_list_data;
 }
 
 /**
