@@ -19,7 +19,7 @@ function template_preprocess_uiowa_events_teaser(&$variables) {
   );
 
   if ($variables['external_link']) {
-    $variables['event']['url'] = 'http://events.uiowa.edu/event/' . $variables['event']['id'];
+    $variables['event']['url'] = 'https://events.uiowa.edu/event/' . $variables['event']['id'];
   }
   else {
     $variables['event']['url'] = $GLOBALS['base_url'] . '/event/' . $variables['event']['id'];

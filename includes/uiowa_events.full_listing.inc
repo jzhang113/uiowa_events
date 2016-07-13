@@ -19,7 +19,7 @@ function template_preprocess_uiowa_events_full_listing(&$variables) {
     $variables['add_link'] = array(
       '#theme' => 'link',
       '#text' => t('Add Your Event'),
-      '#path' => 'http://events.uiowa.edu/event/create',
+      '#path' => 'https://events.uiowa.edu/event/create',
       '#options' => array(
         'attributes' => array(
           'class' => array('uiowa-events-add-link'),

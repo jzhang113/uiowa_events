@@ -151,7 +151,7 @@ function month_date_to_arg($arg) {
  */
 function uiowa_events_load($days = NULL, $type = NULL, $start = NULL, $end = NULL) {
 
-  $localist_url = "http://events.uiowa.edu/api/2/events";
+  $localist_url = "https://events.uiowa.edu/api/2/events";
 
   $parameters = array(
     'pp' => '50',
@@ -336,7 +336,7 @@ function uiowa_events_single_event($event_id) {
     drupal_not_found();
   }
   else {
-    $localist_url = "http://events.uiowa.edu/api/2/events/" . $event_id;
+    $localist_url = "https://events.uiowa.edu/api/2/events/" . $event_id;
 
     if (!cache_get('uiowa_events_single_event' . $event_id)) {
       $localist_event = drupal_http_request($localist_url);

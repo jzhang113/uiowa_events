@@ -55,6 +55,6 @@
         'alt' => t('@title promotional image', array('@title' => $data['title'])),
       ));
     ?>
-    <a href="http://events.uiowa.edu/event/<?php print $data['id'] ?>" role="button" class="btn btn-primary active">View on Event Calendar</a>
+    <a href="https://events.uiowa.edu/event/<?php print $data['id'] ?>" role="button" class="btn btn-primary active">View on Event Calendar</a>
   </div>
 </div>
